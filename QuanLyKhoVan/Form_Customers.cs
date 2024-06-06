@@ -96,7 +96,7 @@ namespace QuanLyKhoVan
             txt_TenKhachHang.Text = "";
             txt_SDT.Text = "";
             txt_DiaChi.Text = "";
-        }   
+        }
         void AddCustomer()
         {
             Customers c = new Customers();
@@ -108,7 +108,7 @@ namespace QuanLyKhoVan
             db.SaveChanges();
             LoadDataCustomer();
             ClearTextBox();
-        }   
+        }
 
         void UpdateCustomer()
         {
@@ -157,14 +157,15 @@ namespace QuanLyKhoVan
             }
             else
             {
-               try {         
+                try
+                {
                     AddCustomer();
                     MessageBox.Show("Thêm Khách hàng thành công");
-                   }
-               catch(Exception ex)
-               {
+                }
+                catch (Exception ex)
+                {
                     MessageBox.Show("Thêm khách hàng thành công " + ex);
-               }
+                }
             }
         }
 
@@ -176,15 +177,15 @@ namespace QuanLyKhoVan
             }
             else
             {
-               try
+                try
                 {
                     UpdateCustomer();
                     MessageBox.Show("Sửa khách hàng thành công");
-                   }
-               catch(Exception ex)
+                }
+                catch (Exception ex)
                 {
                     MessageBox.Show("Sửa khách hàng thất bại  " + ex);
-               }
+                }
             }
         }
 
@@ -209,33 +210,38 @@ namespace QuanLyKhoVan
         }
 
 
-        private void ExportExcel(String path)
+
+        private void ExportExcel(string path)
         {
-            Excel.Application application = new Excel.Application();
-            application.Application.Workbooks.Add(Type.Missing);
-            for (int i = 0; i <= dataGridView1.Columns.Count; i++)
+            Excel.Application application = new Excel.Application(); application.Application.Workbooks.Add(Type.Missing);
+            for (int i = 0; i < dataGridView1.Columns.Count; i++)
             {
-                application.Cells[1, i + 1] = dataGridView1.Columns[i].HeaderText;
+                application.Cells[1, i + 1]
+                =
+                dataGridView1.Columns[i].HeaderText;
             }
             for (int i = 0; i < dataGridView1.Rows.Count; i++)
             {
-                for (int j = 0; j < dataGridView1.Columns.Count; j++)
+                for (int j
+                =
+                0; j < dataGridView1.Columns.Count; j++)
                 {
-                    application.Cells[i + 2, j + 1] = dataGridView1.Rows[i].Cells[j].Value;
-
+                    application.Cells[i + 2, j + 1]
+                    =
+                    dataGridView1.Rows[i].Cells[j].Value;
                 }
+                application.Columns.AutoFit();
+                application.ActiveWorkbook.SaveCopyAs(path);
+                application.ActiveWorkbook.Saved
+                = true;
             }
-            application.Columns.AutoFit();
-            application.ActiveWorkbook.SaveCopyAs();
-            application.ActiveWorkbook.Saved = true;
-
         }
 
-        private void btn_export_Click(object sender, EventArgs e)
+                private void btn_export_Click(object sender, EventArgs e)
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.Title = "Export Excel";
-            saveFileDialog.Filter = "Excel (*.xlsx)|*.xlsx|Excel 2003 (*.xls)|*.xls";
+            saveFileDialog.Filter = "Excel (*.xlsx) | *.xlsx | Excel 2003 (*.xls) |*.xls";
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
                 try
@@ -245,11 +251,11 @@ namespace QuanLyKhoVan
                 }
                 catch (Exception ex)
                 {
-
                     MessageBox.Show("Xuất file không thành công!\n" + ex.Message);
-
                 }
+           
             }
         }
     }
 }
+

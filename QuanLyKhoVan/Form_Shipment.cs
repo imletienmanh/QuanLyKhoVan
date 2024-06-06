@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+using OfficeOpenXml;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace QuanLyKhoVan
 {
@@ -60,7 +63,7 @@ namespace QuanLyKhoVan
             panel_NgayGiaoHang.BackColor = SystemColors.Control;
             txt_status.BackColor = SystemColors.Control;
             panel_Status.BackColor = SystemColors.Control;
-                
+
         }
 
         private void txt_NgayGiaoHang_Click(object sender, EventArgs e)
@@ -92,9 +95,9 @@ namespace QuanLyKhoVan
             panel_NgayGiaoHang.BackColor = SystemColors.Control;
 
         }
-        #endregion 
+        #endregion
 
-         QuanLyKhoVan   db = new QuanLyKhoVan();
+        QuanLyKhoVan db = new QuanLyKhoVan();
 
         #region Method 
         void ClearTextBox()
@@ -183,7 +186,7 @@ namespace QuanLyKhoVan
                 AddShipment();
                 MessageBox.Show("Thêm  thành công");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("Thêm thất bại" + ex);
             }
@@ -196,7 +199,7 @@ namespace QuanLyKhoVan
                 UpdateShipment();
                 MessageBox.Show("Cập nhật thành công");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("Cập nhật thất bại" + ex);
             }
@@ -209,7 +212,7 @@ namespace QuanLyKhoVan
                 DeleteShipment();
                 MessageBox.Show("Xóa thành công");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("Xóa thất bại" + ex);
             }
@@ -231,6 +234,51 @@ namespace QuanLyKhoVan
             txt_NgayGiaoHang.Text = dataGridView1.CurrentRow.Cells[3].Value.ToString();
             txt_status.Text = dataGridView1.CurrentRow.Cells[4].Value.ToString();
 
+        }
+        private void ExportExcel(string path)
+        {
+            Excel.Application application = new Excel.Application(); application.Application.Workbooks.Add(Type.Missing);
+            for (int i = 0; i < dataGridView1.Columns.Count; i++)
+            {
+                application.Cells[1, i + 1]
+                =
+                dataGridView1.Columns[i].HeaderText;
+            }
+            for (int i = 0; i < dataGridView1.Rows.Count; i++)
+            {
+                for (int j
+                =
+                0; j < dataGridView1.Columns.Count; j++)
+                {
+                    application.Cells[i + 2, j + 1]
+                    =
+                    dataGridView1.Rows[i].Cells[j].Value;
+                }
+                application.Columns.AutoFit();
+                application.ActiveWorkbook.SaveCopyAs(path);
+                application.ActiveWorkbook.Saved
+                = true;
+            }
+        }
+
+        private void btn_export_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Title = "Export Excel";
+            saveFileDialog.Filter = "Excel (*.xlsx) | *.xlsx | Excel 2003 (*.xls) |*.xls";
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    ExportExcel(saveFileDialog.FileName);
+                    MessageBox.Show("Xuất file thành công!");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Xuất file không thành công!\n" + ex.Message);
+                }
+
+            }
         }
     }
 }
